@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Fehmina &amp; Alimuzzama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Great+Vibes&display=swap">
+<style>
+/* Layout: a phone-width cream column (the card), covered by a fixed olive-green
+   envelope scene with a sealed card until the guest presses Open.
+   Deliberately single-theme, like a printed card: every colour is set explicitly. */
+:root {
+  --olive-deep: #343e18;
+  --olive: #4a5424;
+  --cover-a: #39441a;
+  --cover-b: #5f6d2c;
+  --cream: #fbf8f2;
+  --cream-deep: #efe9dc;
+  --paper: #fffdf8;
+  --ink: #434b24;
+  --muted: #727654;
+  --line: #5b6431;
+  --font-display: "Cormorant Garamond", Cormorant, Garamond, "Times New Roman", serif;
+  --font-script: "Great Vibes", "Segoe Script", "Brush Script MT", cursive;
+  color-scheme: light;
+}
+
+html, body { height: 100%; }
+body {
+  background: var(--cream-deep);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+body.locked { overflow: hidden; }
+
+/* ---------- Cover (envelope scene) ---------- */
+.cover {
+  position: fixed; inset: 0; z-index: 10;
+  display: grid; place-items: center;
+  padding: 24px 16px;
+  overflow: hidden;
+}
+.cover-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 80% at 75% 15%, rgba(120,138,60,.55), transparent 60%),
+    radial-gradient(140% 90% at 20% 90%, var(--cover-b), var(--cover-a) 75%);
+  transition: opacity .9s ease 1.25s;
+}
+.petals { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+.scene {
+  position: relative;
+  width: min(310px, 82vw);
+  aspect-ratio: 310 / 405;
+  perspective: 1400px;
+}
+.letter, .card {
+  position: absolute; inset: 0;
+  border-radius: 10px;
+  text-align: center;
+}
+.letter {
+  background: var(--cream);
+  display: grid; place-items: center;
+  box-shadow: 0 18px 50px rgba(20,25,5,.35);
+}
+.letter-arch {
+  width: 62%; aspect-ratio: 3 / 4.6;
+  border: 1.2px solid var(--line);
+  border-radius: 999px;
+  display: grid; place-items: center; align-content: center;
+  color: var(--olive);
+  font-family: var(--font-script);
+  font-size: 26px; line-height: 1.1;
+}
+.card {
+  background: var(--paper);
+  box-shadow: 0 24px 60px rgba(20,25,5,.45), 0 2px 6px rgba(20,25,5,.25);
+  transform-origin: left center;
+  overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px;
+  padding: 20px 22px 26px;
+}
+.card .corner { position: absolute; width: 46%; pointer-events: none; }
+.card .corner.tl { top: -4%; left: -5%; }
+.card .corner.br { bottom: -4%; right: -5%; transform: rotate(180deg); }
+
+.seal {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #4d5926, var(--olive-deep) 70%);
+  display: grid; place-items: center;
+  box-shadow: 0 6px 14px rgba(30,35,10,.35), inset 0 1px 1px rgba(255,255,255,.15);
+  margin-bottom: 18px;
+  position: relative; z-index: 1;
+}
+.seal svg { width: 26px; height: 26px; fill: #fffdf8; }
+.cover-names {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(26px, 8.4vw, 31px);
+  line-height: 1.12;
+  color: var(--olive);
+  display: grid;
+  position: relative; z-index: 1;
+}
+.cover-names .amp { font-size: .6em; line-height: 1.4; }
+.sprig { display: flex; align-items: center; gap: 10px; margin-block: 6px 14px; color: var(--olive); }
+.sprig::before, .sprig::after { content: ""; width: 38px; height: 1px; background: currentColor; opacity: .6; }
+.sprig svg { width: 14px; height: 14px; fill: currentColor; }
+.invites { margin: 0 0 22px; color: var(--muted); font-size: 17px; position: relative; z-index: 1; }
+.open-btn {
+  position: relative; overflow: hidden; z-index: 1;
+  font: 700 18px/1 var(--font-display);
+  letter-spacing: .02em;
+  color: #fffdf8;
+  background: var(--olive-deep);
+  border: 0; border-radius: 999px;
+  padding: 15px 34px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(30,35,10,.3);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.open-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(30,35,10,.34); }
+.open-btn:active { transform: scale(.96); }
+.open-btn:focus-visible, .replay:focus-visible, .directions:focus-visible {
+  outline: 2px solid #c9a24a; outline-offset: 3px;
+}
+.ripple {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  width: 120px; height: 120px; margin: -60px 0 0 -60px;
+  background: rgba(255,255,255,.45);
+  animation: ripple .6s ease-out forwards;
+}
+@keyframes ripple { from { transform: scale(0); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+
+/* Opening sequence: seal pops, card swings open like a door,
+   the letter inside grows into the full invitation, the green fades away. */
+.cover.opening { pointer-events: none; }
+.cover.opening .cover-bg { opacity: 0; }
+.cover.opening .seal { animation: seal-pop .5s ease-out forwards; }
+.cover.opening .card { animation: swing 1.35s cubic-bezier(.55,.05,.35,1) .25s forwards; }
+.cover.opening .letter { animation: grow 1.1s cubic-bezier(.5,0,.3,1) 1.35s forwards; }
+@keyframes seal-pop {
+  40% { transform: scale(1.25); }
+  100% { transform: scale(.2); opacity: 0; }
+}
+@keyframes swing {
+  0% { transform: rotateY(0); }
+  70% { opacity: 1; }
+  100% { transform: rotateY(-102deg); opacity: 0; }
+}
+@keyframes grow {
+  to { transform: scale(2.8); opacity: 0; }
+}
+
+/* ---------- The invitation ---------- */
+.invite {
+  position: relative;
+  max-width: 460px;
+  min-height: 100%;
+  margin-inline: auto;
+  padding-inline: 16px;
+  padding-block: 0 56px;
+  background: var(--cream);
+  overflow: hidden;
+  text-align: center;
+}
+@media (min-width: 520px) {
+  .invite { box-shadow: 0 0 40px rgba(60,60,30,.12); }
+}
+.deco { position: absolute; pointer-events: none; opacity: .5; width: 210px; }
+.deco-tl { top: -30px; left: -50px; }
+.deco-ml { top: 640px; left: -95px; width: 190px; transform: rotate(-35deg); opacity: .4; }
+.deco-mr { top: 380px; right: -90px; width: 200px; transform: rotate(150deg); opacity: .45; }
+.deco-br { bottom: -40px; right: -60px; transform: rotate(180deg); opacity: .45; }
+
+.hero {
+  position: relative;
+  display: grid; justify-items: center;
+  padding-block: 44px 120px;
+}
+.arch {
+  position: relative;
+  width: min(300px, 100%);
+  height: 430px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 58px;
+}
+.eyebrow {
+  margin: 0 0 30px;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  line-height: 1.9;
+  color: var(--muted);
+  padding-left: .32em;
+}
+.script-names {
+  margin: 0;
+  display: grid;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(42px, 13vw, 54px);
+  line-height: 1.15;
+  color: var(--olive);
+}
+.script-names .amp { font-size: .78em; }
+.bouquet {
+  position: absolute;
+  width: 330px; max-width: 110%;
+  left: 50%; margin-left: -165px;
+  bottom: 18px;
+  pointer-events: none;
+}
+@media (max-width: 360px) { .bouquet { width: 290px; margin-left: -145px; } }
+
+.sec { position: relative; display: grid; justify-items: center; }
+.caps {
+  margin: 0;
+  font-size: 15px; font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+.couple { padding-block: 48px 8px; gap: 2px; }
+.full {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(32px, 9.5vw, 38px);
+  line-height: 1.2;
+  color: var(--olive);
+  text-wrap: balance;
+}
+.parent {
+  margin: 6px 0 0;
+  font-size: 11.5px; font-weight: 600;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.big-amp { margin: 18px 0 8px; font-size: 44px; line-height: 1; color: var(--olive); }
+
+.event { padding-block: 52px 8px; gap: 0; }
+.venue { margin: 0; font-size: 17px; line-height: 1.55; }
+.at { margin: 14px 0 0; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.time {
+  margin: 22px 0 0;
+  font-size: 24px; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.date-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px;
+  margin-top: 22px;
+  font-size: 12px; font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.date-row .bar { width: 1px; height: 30px; background: var(--line); opacity: .55; }
+.date-row .day { font-size: 36px; font-weight: 500; letter-spacing: 0; line-height: 1; font-variant-numeric: tabular-nums; }
+.year { margin: 12px 0 0; font-size: 20px; font-weight: 600; letter-spacing: .06em; }
+.directions {
+  margin-top: 26px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--olive);
+  text-decoration: none;
+  font-size: 16px; font-weight: 600;
+  background: rgba(255,253,248,.7);
+}
+.directions svg { width: 16px; height: 16px; fill: currentColor; }
+.directions:hover { background: var(--paper); }
+
+.closing { padding-block: 60px 0; gap: 18px; }
+.closing-line {
+  margin: 0;
+  font-size: 19px; font-style: italic;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+.replay {
+  font: 500 14px var(--font-display);
+  color: var(--muted);
+  background: none; border: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+  padding: 6px 10px;
+}
+
+/* Hero entrance after opening */
+body.opened .arch { animation: arch-in 1.4s cubic-bezier(.2,.7,.2,1) both; }
+body.opened .eyebrow { animation: fade-up 1s ease both .35s; }
+body.opened .script-names span { animation: fade-up 1.1s ease both; }
+body.opened .script-names span:nth-child(1) { animation-delay: .55s; }
+body.opened .script-names span:nth-child(2) { animation-delay: .8s; }
+body.opened .script-names span:nth-child(3) { animation-delay: 1s; }
+body.opened .bouquet { animation: bloom 1.5s cubic-bezier(.2,.7,.2,1) both .4s; }
+body.opened .deco-tl, body.opened .deco-mr { animation: fade-in 2s ease both .3s; }
+@keyframes arch-in { from { opacity: 0; transform: translateY(18px) scale(.97); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } }
+@keyframes bloom { from { opacity: 0; transform: translateY(16px) scale(.9); } }
+@keyframes fade-in { from { opacity: 0; } }
+
+/* Sections ease in as they scroll into view where the browser supports it;
+   elsewhere they are simply visible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  }
+}
+@keyframes rise { from { opacity: .1; transform: translateY(26px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .cover.opening .card, .cover.opening .letter, .cover.opening .seal { animation: none; opacity: 0; }
+  .cover-bg { transition: opacity .35s ease; }
+  body.opened .arch, body.opened .eyebrow, body.opened .script-names span,
+  body.opened .bouquet, body.opened .deco-tl, body.opened .deco-mr { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cover" id="cover">
+  <div class="cover-bg"><canvas class="petals" id="petals" aria-hidden="true"></canvas></div>
+  <div class="scene">
+    <div class="letter" aria-hidden="true">
+      <div class="letter-arch"><span>Fehmina</span><span>&amp;</span><span>Alimuzzama</span></div>
+    </div>
+    <div class="card">
+      <img class="corner tl" data-art="corner" alt="">
+      <img class="corner br" data-art="corner" alt="">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 20.6c-.3 0-.6-.1-.8-.3C6.4 16.2 3 13.1 3 9.4 3 7 4.9 5.1 7.3 5.1c1.9 0 3.3 1 4.7 2.6 1.4-1.6 2.8-2.6 4.7-2.6C19.1 5.1 21 7 21 9.4c0 3.7-3.4 6.8-8.2 10.9-.2.2-.5.3-.8.3z"/></svg>
+      </div>
+      <h1 class="cover-names"><span>Fehmina</span><span class="amp">&amp;</span><span>Alimuzzama</span></h1>
+      <div class="sprig" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M12 22c-.4-3.6.2-6.6 1.8-9-2.6 1.3-5.4 1.2-8-.6 2.9-2.6 6-3 9-1.1C14 7.6 15.6 5 19.4 3c.4 4.2-1.2 7.4-4.6 9.2-1.5 2.4-2 5.6-1.6 9.8H12z"/></svg>
+      </div>
+      <p class="invites">Cordially Invites</p>
+      <button class="open-btn" id="open" type="button">Open</button>
+    </div>
+  </div>
+</div>
+
+<main class="invite" id="invite">
+  <img class="deco deco-tl" data-art="corner" alt="">
+  <img class="deco deco-mr" data-art="corner" alt="">
+  <img class="deco deco-ml" data-art="corner" alt="">
+  <img class="deco deco-br" data-art="corner" alt="">
+
+  <section class="hero" aria-label="The wedding of Fehmina and Alimuzzama">
+    <div class="arch">
+      <p class="eyebrow">The<br>Wedding<br>Of</p>
+      <h2 class="script-names"><span>Fehmina</span><span class="amp">&amp;</span><span>Alimuzzama</span></h2>
+    </div>
+    <img class="bouquet" data-art="bouquet" alt="">
+  </section>
+
+  <section class="sec reveal">
+    <p class="caps">We joyfully announce<br>the wedding of our children</p>
+  </section>
+
+  <section class="sec couple reveal">
+    <h2 class="full">Fehmina Khan</h2>
+    <p class="parent">Khan Imran Nabi Sherwani</p>
+    <p class="big-amp" aria-hidden="true">&amp;</p>
+    <h2 class="full">Alimuzzama Khan</h2>
+    <p class="parent">Khan Rizwan Abdul vlai</p>
+  </section>
+
+  <section class="sec event reveal" aria-label="Baraat details">
+    <p class="venue">Baraat<br>Bagai Banquet<br>Ashoka Marg<br>Nashik</p>
+    <p class="at">At</p>
+    <p class="time">20:00</p>
+    <div class="date-row">
+      <span>Saturday</span><span class="bar"></span><span class="day">21</span><span class="bar"></span><span>November</span>
+    </div>
+    <p class="year">2026</p>
+    <a class="directions" href="https://www.google.com/maps/search/?api=1&amp;query=Bagai%20Banquet%2C%20Ashoka%20Marg%2C%20Nashik" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+      Get directions
+    </a>
+  </section>
+
+  <section class="sec closing reveal">
+    <p class="closing-line">Your presence would be the greatest gift we could receive!</p>
+    <button class="replay" id="replay" type="button">Open the envelope again</button>
+  </section>
+</main>
+
+<script>
+(() => {
+  const TAU = Math.PI * 2;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Hand-drawn florals (canvas) ----------
+  function seeded(seed) {
+    return () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  }
+
+  function petal(ctx, len, wid, shaded) {
+    const g = ctx.createLinearGradient(0, 0, 0, -len);
+    g.addColorStop(0, shaded ? "#d9d2ba" : "#e9e3cf");
+    g.addColorStop(0.45, shaded ? "#f1ecdd" : "#f9f6ec");
+    g.addColorStop(1, "#fffefa");
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(wid * 1.05, -len * 0.2, wid * 0.95, -len * 0.82, 0, -len);
+    ctx.bezierCurveTo(-wid * 0.95, -len * 0.82, -wid * 1.05, -len * 0.2, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(120,112,80,.26)";
+    ctx.lineWidth = 0.8;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(0, -len * 0.12);
+    ctx.quadraticCurveTo(wid * 0.1, -len * 0.5, 0, -len * 0.86);
+    ctx.strokeStyle = "rgba(150,140,105,.2)";
+    ctx.lineWidth = 0.7;
+    ctx.stroke();
+  }
+
+  function flower(ctx, x, y, r, rot, rand) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.shadowColor = "rgba(55,60,25,.22)";
+    ctx.shadowBlur = r * 0.18;
+    ctx.shadowOffsetY = r * 0.04;
+    for (let i = 0; i < 5; i++) {
+      ctx.save(); ctx.rotate(i * TAU / 5 + TAU / 10);
+      petal(ctx, r * (0.84 + rand() * 0.08), r * 0.36, true);
+      ctx.restore();
+    }
+    ctx.shadowBlur = r * 0.1;
+    for (let i = 0; i < 5; i++) {
+      ctx.save(); ctx.rotate(i * TAU / 5 + (rand() - 0.5) * 0.14);
+      petal(ctx, r * (0.94 + rand() * 0.1), r * 0.42, false);
+      ctx.restore();
+    }
+    ctx.shadowColor = "transparent";
+    const cg = ctx.createRadialGradient(-r * 0.04, -r * 0.04, r * 0.02, 0, 0, r * 0.25);
+    cg.addColorStop(0, "#f7d77f");
+    cg.addColorStop(0.65, "#e4aa4a");
+    cg.addColorStop(1, "rgba(214,150,60,0)");
+    ctx.fillStyle = cg;
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.25, 0, TAU); ctx.fill();
+    for (let i = 0; i < 26; i++) {
+      const a = rand() * TAU, d = r * (0.04 + rand() * 0.15);
+      ctx.fillStyle = rand() < 0.5 ? "#c4852b" : "#f3cf72";
+      ctx.beginPath(); ctx.arc(Math.cos(a) * d, Math.sin(a) * d, r * 0.022, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function bud(ctx, x, y, len, rot) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    ctx.shadowColor = "rgba(55,60,25,.2)";
+    ctx.shadowBlur = len * 0.12;
+    ctx.save(); ctx.rotate(-0.26); petal(ctx, len * 0.88, len * 0.2, true); ctx.restore();
+    ctx.save(); ctx.rotate(0.26); petal(ctx, len * 0.88, len * 0.2, true); ctx.restore();
+    petal(ctx, len, len * 0.24, false);
+    ctx.shadowColor = "transparent";
+    ctx.fillStyle = "#7d8a45";
+    ctx.beginPath();
+    ctx.moveTo(-len * 0.15, -len * 0.02);
+    ctx.quadraticCurveTo(0, -len * 0.3, len * 0.15, -len * 0.02);
+    ctx.quadraticCurveTo(0, len * 0.09, -len * 0.15, -len * 0.02);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function leaf(ctx, x, y, len, rot) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rot);
+    const w = len * 0.25;
+    const g = ctx.createLinearGradient(-w, 0, w, 0);
+    g.addColorStop(0, "#6c7a39");
+    g.addColorStop(0.5, "#98a862");
+    g.addColorStop(1, "#bac68d");
+    ctx.shadowColor = "rgba(40,45,15,.18)";
+    ctx.shadowBlur = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(w * 1.2, -len * 0.25, w * 0.9, -len * 0.75, 0, -len);
+    ctx.bezierCurveTo(-w * 0.8, -len * 0.7, -w * 1.1, -len * 0.3, 0, 0);
+    ctx.fillStyle = g;
+    ctx.fill();
+    ctx.shadowColor = "transparent";
+    ctx.strokeStyle = "rgba(230,236,196,.65)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, -len * 0.03);
+    ctx.quadraticCurveTo(w * 0.16, -len * 0.5, 0, -len * 0.94);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function stem(ctx, x1, y1, cx, cy, x2, y2) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.quadraticCurveTo(cx, cy, x2, y2);
+    ctx.strokeStyle = "#8a7d48";
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.stroke();
+  }
+
+  function paint(w, h, draw) {
+    const S = 2;
+    const c = document.createElement("canvas");
+    c.width = w * S; c.height = h * S;
+    const ctx = c.getContext("2d");
+    ctx.scale(S, S);
+    draw(ctx);
+    return c;
+  }
+
+  const corner = paint(320, 320, (ctx) => {
+    const r = seeded(7);
+    stem(ctx, 120, 50, 190, 10, 262, 30);
+    stem(ctx, 55, 140, 20, 210, 30, 262);
+    leaf(ctx, 100, 72, 128, 1.25);
+    leaf(ctx, 72, 100, 120, 2.6);
+    leaf(ctx, 128, 44, 92, 0.72);
+    leaf(ctx, 40, 125, 88, 2.95);
+    leaf(ctx, 196, 26, 60, 1.9);
+    bud(ctx, 262, 30, 48, 1.5);
+    bud(ctx, 30, 262, 44, 3.05);
+    flower(ctx, 170, 128, 34, 1.0, r);
+    flower(ctx, 72, 72, 72, 0.2, r);
+  });
+
+  const bouquet = paint(360, 250, (ctx) => {
+    const r = seeded(21);
+    stem(ctx, 175, 135, 140, 60, 112, 48);
+    stem(ctx, 185, 135, 240, 60, 262, 40);
+    leaf(ctx, 180, 140, 128, -1.25);
+    leaf(ctx, 180, 140, 128, 1.25);
+    leaf(ctx, 180, 145, 110, -2.15);
+    leaf(ctx, 180, 145, 110, 2.15);
+    leaf(ctx, 178, 138, 92, -0.55);
+    leaf(ctx, 182, 138, 88, 0.6);
+    bud(ctx, 112, 50, 50, -0.55);
+    bud(ctx, 262, 42, 54, 0.45);
+    bud(ctx, 300, 126, 40, 1.35);
+    flower(ctx, 116, 152, 38, 0.7, r);
+    flower(ctx, 248, 156, 34, -0.4, r);
+    flower(ctx, 180, 130, 60, 0.15, r);
+  });
+
+  const blossom = paint(28, 28, (ctx) => {
+    ctx.translate(14, 14);
+    for (let i = 0; i < 5; i++) {
+      ctx.save();
+      ctx.rotate(i * TAU / 5);
+      const g = ctx.createLinearGradient(0, 0, 0, -12);
+      g.addColorStop(0, "#b5555f");
+      g.addColorStop(1, "#e7a1a7");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(0, -6.5, 4.6, 6.4, 0, 0, TAU);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.fillStyle = "#f2cf78";
+    ctx.beginPath(); ctx.arc(0, 0, 2.4, 0, TAU); ctx.fill();
+  });
+
+  const art = { corner: corner.toDataURL("image/png"), bouquet: bouquet.toDataURL("image/png") };
+  document.querySelectorAll("[data-art]").forEach((img) => { img.src = art[img.dataset.art]; });
+
+  // ---------- Falling blossoms on the cover ----------
+  const canvas = document.getElementById("petals");
+  const pctx = canvas.getContext("2d");
+  let flakes = [], running = false, last = 0, W = 0, H = 0;
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize() {
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    pctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  function makeFlakes() {
+    const count = Math.round(Math.min(34, Math.max(16, W * H / 22000)));
+    flakes = Array.from({ length: count }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      s: 8 + Math.random() * 9,
+      vy: 16 + Math.random() * 26,
+      sway: Math.random() * TAU, amp: 8 + Math.random() * 22, sp: 0.5 + Math.random() * 0.7,
+      rot: Math.random() * TAU, vr: (Math.random() - 0.5) * 1.6,
+      a: 0.55 + Math.random() * 0.4,
+    }));
+  }
+  function drawFlakes() {
+    pctx.clearRect(0, 0, W, H);
+    for (const f of flakes) {
+      pctx.save();
+      pctx.globalAlpha = f.a;
+      pctx.translate(f.x + Math.sin(f.sway) * f.amp, f.y);
+      pctx.rotate(f.rot);
+      pctx.drawImage(blossom, -f.s / 2, -f.s / 2, f.s, f.s);
+      pctx.restore();
+    }
+  }
+  function tick(t) {
+    if (!running) return;
+    const dt = Math.min((t - (last || t)) / 1000, 0.05);
+    last = t;
+    for (const f of flakes) {
+      f.y += f.vy * dt; f.sway += f.sp * dt; f.rot += f.vr * dt;
+      if (f.y > H + 20) { f.y = -20; f.x = Math.random() * W; }
+    }
+    drawFlakes();
+    requestAnimationFrame(tick);
+  }
+  function startPetals() {
+    resize(); makeFlakes(); drawFlakes();
+    if (reduceMotion) return;
+    running = true; last = 0;
+    requestAnimationFrame(tick);
+  }
+  addEventListener("resize", () => { if (!cover.hidden) { resize(); drawFlakes(); } });
+
+  // ---------- Open / replay ----------
+  const cover = document.getElementById("cover");
+  const invite = document.getElementById("invite");
+  const openBtn = document.getElementById("open");
+  const timers = [];
+
+  function lockPage() {
+    document.body.classList.add("locked");
+    invite.inert = true;
+  }
+
+  function openInvite(e) {
+    if (cover.classList.contains("opening")) return;
+    if (e && e.clientX) {
+      const b = openBtn.getBoundingClientRect();
+      const dot = document.createElement("span");
+      dot.className = "ripple";
+      dot.style.left = (e.clientX - b.left) + "px";
+      dot.style.top = (e.clientY - b.top) + "px";
+      openBtn.appendChild(dot);
+    }
+    cover.classList.add("opening");
+    timers.push(setTimeout(() => {
+      document.body.classList.add("opened");
+      document.body.classList.remove("locked");
+      invite.inert = false;
+    }, reduceMotion ? 50 : 1300));
+    timers.push(setTimeout(() => {
+      cover.hidden = true;
+      running = false;
+    }, reduceMotion ? 450 : 2550));
+  }
+
+  function replay() {
+    timers.splice(0).forEach(clearTimeout);
+    openBtn.querySelectorAll(".ripple").forEach((n) => n.remove());
+    scrollTo(0, 0);
+    document.body.classList.remove("opened");
+    cover.classList.remove("opening");
+    cover.hidden = false;
+    lockPage();
+    void cover.offsetWidth; // restart the CSS animations
+    startPetals();
+    openBtn.focus({ preventScroll: true });
+  }
+
+  openBtn.addEventListener("click", openInvite);
+  document.getElementById("replay").addEventListener("click", replay);
+
+  lockPage();
+  startPetals();
+})();
+</script>
+</body>
+</html>
